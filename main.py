@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
 import subprocess
+import glob
 
 
 def backupDir(path, backupPath):
@@ -18,6 +19,9 @@ def archiveDir(path, type):
     if os.path.exists(path):
         if type == "zip":
             subprocess.call(['zip','-r','/home/student/archiveddir.zip',path])
+        if type=="tar":
+           
+            subprocess.call(['tar','-cf','/home/student/archiveddir.tar', '*' ],cwd=path)
 
 
 
@@ -27,15 +31,15 @@ def main():
     print("2. Archive the contents of a given directory")
     print("5. Exit this menu")
     userChoice=input()
-    if userChoice ==1:
+    if userChoice =="1":
         path=input("enter path")
         backuppath=input("enter backup path")       # runs backupDir function
         backupDir(path,backuppath)
-    if userChoice==2:
+    if userChoice=="2":
         path=input("Enter path: ")
         type=input("Enter archive type: ")
         archiveDir(path,type)
-    if userChoice==5:
+    if userChoice=="5":
         pass                                        # exit condition
 
 main()
