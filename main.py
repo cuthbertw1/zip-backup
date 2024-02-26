@@ -20,8 +20,8 @@ def archiveDir(path, type):
         if type == "zip":
             subprocess.call(['zip','-r','/home/student/archiveddir.zip',path])
         if type=="tar":
-           
-            subprocess.call(['tar','-cf','/home/student/archiveddir.tar', '*' ],cwd=path)
+           items=glob.glob(os.path.join(path,'*'))
+           subprocess.call(['tar','-cf','/home/student/archiveddir.tar'],+items,cwd=path)
 
 
 
