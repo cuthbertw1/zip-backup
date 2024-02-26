@@ -14,15 +14,30 @@ def backupDir(path, backupPath):
     else:
         print('Error main path or backup path not found')
 def archiveDir(path, type):
+    type=type.lower()
     validTypes=['zip','gztar','tar','bztar','xztar']
 
     if os.path.exists(path):
-        if type == "zip":
+        if type not in validTypes:
+            print("Error: invalid file type entered ")
+        elif type == "zip":
             subprocess.call(['zip','-r','/home/student/archiveddir.zip',path])
-        if type=="tar":
-           items=glob.glob(os.path.join(path,'*'))
-           subprocess.call(['tar','-cf','/home/student/archiveddir.tar'],+items,cwd=path)
-
+        elif type=="tar":
+           os.chdir(path)
+           items=glob.glob('*')
+           subprocess.run(['tar','-cf','/home/student/archiveddir.tar']+items)
+        elif type=="gztar":
+            os.chdir(path)
+            items=glob.glob('*')
+            subprocess.run(['tar','-czf','/home/student/archiveddir.tar.gz']+items)
+        elif type=="bztar":
+            os.chdir(path)
+            items = glob.glob('*')
+            subprocess.run(['tar', '-cjf', '/home/student/archiveddir.tar.bz2'] + items)
+        elif type=="xztar":
+            os.chdir(path)
+            items = glob.glob('*')
+            subprocess.run(['tar', '-cJf', '/home/student/archiveddir.tar.xz'] + items)
 
 
 def main():
