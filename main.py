@@ -2,6 +2,7 @@
 import os
 import subprocess
 import glob
+import zipfile
 
 
 def backupDir(path, backupPath):
@@ -40,10 +41,23 @@ def archiveDir(path, type):
             subprocess.run(['tar', '-cJf', '/home/student/archiveddir.tar.xz'] + items)
 
 
+def archiveSize(path):
+    if os.path.exists(path):
+        fileStats=os.stat(path)
+        size=fileStats.st_size
+
+        if size>=1024:
+            size=size/1024
+            size=str(size)+" Kilobytes"
+        else:
+            print(str(size)+" Bytes")
+    else:
+        print("Error: invalid path given")
 def main():
     print("Welcome user. What would you like to do?")
     print("1. back up directory contents to new directory")         # initial choices
     print("2. Archive the contents of a given directory")
+    print("3. view information about given archive ")
     print("5. Exit this menu")
     userChoice=input()
     if userChoice =="1":
@@ -54,6 +68,9 @@ def main():
         path=input("Enter path: ")
         type=input("Enter archive type: ")
         archiveDir(path,type)
+    if userChoice=="3":
+        path=input("Enter path: ")
+        archiveSize(path)
     if userChoice=="5":
         pass                                        # exit condition
 
