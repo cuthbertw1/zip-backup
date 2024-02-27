@@ -6,10 +6,10 @@ import zipfile
 
 
 def backupDir(path, backupPath):
-    if(os.path.exists(path) and os.path.exists(backupPath)):
+    if(os.path.exists(path) and os.path.exists(backupPath)):        # input validation
         mainpath=path
         files=os.listdir(path)
-        for file in files:
+        for file in files:                      # loop through files
             currentPath=mainpath+'/'+file
             subprocess.run(['cp',currentPath,backupPath])
     else:
@@ -42,17 +42,34 @@ def archiveDir(path, type):
 
 
 def archiveSize(path):
-    if os.path.exists(path):
-        fileStats=os.stat(path)
-        size=fileStats.st_size
-
-        if size>=1024:
-            size=size/1024
-            size=str(size)+" Kilobytes"
-        else:
-            print(str(size)+" Bytes")
-    else:
-        print("Error: invalid path given")
+    # getting threshold
+    threshold = input("What is the threshold for the size of the files: ")
+    # input validation
+    try:
+        path = os.path.expanduser(path)
+        # open zip file
+        with zipfile.ZipFile(path) as filePntr:
+            # checking files in the zip file
+            for file in filePntr.infolist():
+                if file.create_system == 0:                     # os detection
+                    system = "windows"
+                elif file.create_system == 3:
+                    system = "Unix"
+                else:
+                    system = "UNKNOWN"
+                # checking if the file is within the threshold
+                if file.file_size / 1024 > float(threshold):
+                    # if so print
+                    print("OS:", system, ",", "File name:", file.filename, ",",
+                          "KB:", "{:.2f}".format(file.file_size / 1024), ",",                 # /1024 to account for kb
+                          "Compressed KB:", "{:.2f}".format(file.compress_size / 1024))
+                # otherwise don't print
+                else:
+                    continue
+            # close the file
+            filePntr.close()
+    except:
+        print("Not a zip file or file does not exists")
 def main():
     print("Welcome user. What would you like to do?")
     print("1. back up directory contents to new directory")         # initial choices
