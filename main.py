@@ -80,11 +80,19 @@ def whenModded(path):
         oneMonthAgo = currentTime - (30 * 24 * 3600)
         for file_name in os.listdir(path):
             file_path = os.path.join(path, file_name)
-            if os.path.isfile(file_path) and os.path.getmtime(file_path) < oneMonthAgo:
+            if  os.path.getmtime(file_path) > oneMonthAgo:
                 print(file_path)
 
     except FileNotFoundError:
-        print("Error: directory not found")
+        print("directory not found or not specified")
+        path = os.path.expanduser("~")
+        currentTime = time.time()
+        oneMonthAgo = currentTime - (30 * 24 * 3600)
+        for file_name in os.listdir(path):
+            file_path = os.path.join(path, file_name)
+            if os.path.getmtime(file_path) > oneMonthAgo:
+                print(file_path)
+
 
 
 def main():
@@ -92,6 +100,7 @@ def main():
     print("1. back up directory contents to new directory")         # initial choices
     print("2. Archive the contents of a given directory")
     print("3. view information about given archive ")
+    print("4. view mod information about a given directory")
     print("5. Exit this menu")
     userChoice=input()
     if userChoice =="1":
@@ -105,6 +114,9 @@ def main():
     if userChoice=="3":
         path=input("Enter path: ")
         archiveSize(path)
+    if userChoice=="4":
+        path=input("Enter path: ")
+        whenModded(path)
     if userChoice=="5":
         pass                                        # exit condition
 
