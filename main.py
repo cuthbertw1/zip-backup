@@ -76,13 +76,14 @@ def archiveSize(path):
 def whenModded(path):
     try:
         path = os.path.expanduser(path)
-        curentTime=time.time()
-        oneMonthAgo=curentTime(30*24*3600)
-        for file in os.listdir(path):
-            if os.path.getmtime(file)<oneMonthAgo:
-                print(file)
+        currentTime = time.time()
+        oneMonthAgo = currentTime - (30 * 24 * 3600)
+        for file_name in os.listdir(path):
+            file_path = os.path.join(path, file_name)
+            if os.path.isfile(file_path) and os.path.getmtime(file_path) < oneMonthAgo:
+                print(file_path)
 
-    except:
+    except FileNotFoundError:
         print("Error: directory not found")
 
 
