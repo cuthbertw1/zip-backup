@@ -3,6 +3,7 @@ import os
 import subprocess
 import glob
 import zipfile
+import time
 
 
 def backupDir(path, backupPath):
@@ -70,6 +71,21 @@ def archiveSize(path):
             filePntr.close()
     except:
         print("Not a zip file or file does not exists")
+
+
+def whenModded(path):
+    try:
+        path = os.path.expanduser(path)
+        curentTime=time.time()
+        oneMonthAgo=curentTime(30*24*3600)
+        for file in os.listdir(path):
+            if os.path.getmtime(file)<oneMonthAgo:
+                print(file)
+
+    except:
+        print("Error: directory not found")
+
+
 def main():
     print("Welcome user. What would you like to do?")
     print("1. back up directory contents to new directory")         # initial choices
