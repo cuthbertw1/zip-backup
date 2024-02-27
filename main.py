@@ -7,6 +7,8 @@ import time
 
 
 def backupDir(path, backupPath):
+    path=os.path.expanduser(path)
+    backupPath=os.path.expanduser(backupPath)
     if(os.path.exists(path) and os.path.exists(backupPath)):        # input validation
         mainpath=path
         files=os.listdir(path)
@@ -16,6 +18,7 @@ def backupDir(path, backupPath):
     else:
         print('Error main path or backup path not found')
 def archiveDir(path, type):
+    path=os.path.expanduser(path)
     type=type.lower()
     validTypes=['zip','gztar','tar','bztar','xztar']
 
@@ -44,13 +47,13 @@ def archiveDir(path, type):
 
 def archiveSize(path):
     # getting threshold
-    threshold = input("What is the threshold for the size of the files: ")
+    threshold = input("Enter the threshold for the size of the files: ")
     # input validation
     try:
         path = os.path.expanduser(path)
-        # open zip file
+                                                                    # open zip file
         with zipfile.ZipFile(path) as filePntr:
-            # checking files in the zip file
+            # checking thr files in the zip file
             for file in filePntr.infolist():
                 if file.create_system == 0:                     # os detection
                     system = "windows"
@@ -58,13 +61,13 @@ def archiveSize(path):
                     system = "Unix"
                 else:
                     system = "UNKNOWN"
-                # checking if the file is within the threshold
+                                                                        # checking if the file is within the threshold
                 if file.file_size / 1024 > float(threshold):
                     # if so print
                     print("OS:", system, ",", "File name:", file.filename, ",",
                           "KB:", "{:.2f}".format(file.file_size / 1024), ",",                 # /1024 to account for kb
                           "Compressed KB:", "{:.2f}".format(file.compress_size / 1024))
-                # otherwise don't print
+                # else do not print
                 else:
                     continue
             # close the file
@@ -76,15 +79,15 @@ def archiveSize(path):
 def whenModded(path):
     try:
         path = os.path.expanduser(path)
-        currentTime = time.time()
+        currentTime = time.time()             #calculate the time and how long was a month ago
         oneMonthAgo = currentTime - (30 * 24 * 3600)
         for file_name in os.listdir(path):
             file_path = os.path.join(path, file_name)
-            if  os.path.getmtime(file_path) > oneMonthAgo:
+            if  os.path.getmtime(file_path) > oneMonthAgo:          # lists the files if modified in the past month
                 print(file_path)
 
     except FileNotFoundError:
-        print("directory not found or not specified")
+        print("directory not found or not specified") # executes on the home directory if there is not an input
         path = os.path.expanduser("~")
         currentTime = time.time()
         oneMonthAgo = currentTime - (30 * 24 * 3600)
@@ -97,7 +100,7 @@ def printMenu():
     print("Welcome user. What would you like to do?")
     print("1. back up directory contents to new directory")  # initial choices
     print("2. Archive the contents of a given directory")
-    print("3. view information about given archive ")
+    print("3. view information about given zip file ")
     print("4. view mod information about a given directory")
     print("5. Exit this menu")
 
@@ -108,13 +111,13 @@ def main():
     userChoice=input()
     while int(userChoice) in validChoices:
         if userChoice =="1":
-            path=input("enter path")
-            backuppath=input("enter backup path")       # runs backupDir function
+            path=input("enter path to backup: ")
+            backuppath=input("enter path where backup files will be saved: ")       # runs backupDir function
             backupDir(path,backuppath)
             break
         elif userChoice=="2":
             path=input("Enter path: ")
-            type=input("Enter archive type: ")
+            type=input("Enter archive type- zip,gztar,tar,bztar,xztar: ")
             archiveDir(path,type)
             break
         elif userChoice=="3":
