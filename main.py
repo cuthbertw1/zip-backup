@@ -19,11 +19,11 @@ def archiveDir(path, type):
     type=type.lower()
     validTypes=['zip','gztar','tar','bztar','xztar']
 
-    if os.path.exists(path):
+    if os.path.exists(path):                        #checks path and archive type is valid
         if type not in validTypes:
             print("Error: invalid file type entered ")
-        elif type == "zip":
-            subprocess.call(['zip','-r','/home/student/archiveddir.zip',path])
+        elif type == "zip":                                             #logic for determining archive type
+            subprocess.call(['zip','-r','/home/student/archiveddir.zip',path])  # runs respective command
         elif type=="tar":
            os.chdir(path)
            items=glob.glob('*')
@@ -93,31 +93,41 @@ def whenModded(path):
             if os.path.getmtime(file_path) > oneMonthAgo:
                 print(file_path)
 
-
-
-def main():
+def printMenu():
     print("Welcome user. What would you like to do?")
-    print("1. back up directory contents to new directory")         # initial choices
+    print("1. back up directory contents to new directory")  # initial choices
     print("2. Archive the contents of a given directory")
     print("3. view information about given archive ")
     print("4. view mod information about a given directory")
     print("5. Exit this menu")
+
+def main():
+    validChoices=[1,2,3,4,5]
+    printMenu()
+
     userChoice=input()
-    if userChoice =="1":
-        path=input("enter path")
-        backuppath=input("enter backup path")       # runs backupDir function
-        backupDir(path,backuppath)
-    if userChoice=="2":
-        path=input("Enter path: ")
-        type=input("Enter archive type: ")
-        archiveDir(path,type)
-    if userChoice=="3":
-        path=input("Enter path: ")
-        archiveSize(path)
-    if userChoice=="4":
-        path=input("Enter path: ")
-        whenModded(path)
-    if userChoice=="5":
-        pass                                        # exit condition
+    while int(userChoice) in validChoices:
+        if userChoice =="1":
+            path=input("enter path")
+            backuppath=input("enter backup path")       # runs backupDir function
+            backupDir(path,backuppath)
+            break
+        elif userChoice=="2":
+            path=input("Enter path: ")
+            type=input("Enter archive type: ")
+            archiveDir(path,type)
+            break
+        elif userChoice=="3":
+            path=input("Enter path: ")
+            archiveSize(path)
+            break
+        elif userChoice=="4":
+            path=input("Enter path: ")
+            whenModded(path)
+            break
+        elif userChoice=="5" or userChoice=="exit":
+            break      # exit condition
+        else:
+            print("invalid choice selected, please select from the following")
 
 main()
